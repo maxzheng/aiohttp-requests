@@ -7,7 +7,7 @@ remote_requirements = '\n'.join(str(r.req) for r in parse_requirements("requirem
 
 setuptools.setup(
     name='aiohttp-requests',
-    version='0.0.2',
+    version='0.0.3',
 
     author='Max Zheng',
     author_email='maxzheng.os @t gmail.com',
