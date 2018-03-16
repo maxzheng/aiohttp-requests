@@ -24,7 +24,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
 
-    python_requires='>=3.6',
+    python_requires='>=3.5',
     setup_requires=['setuptools-git'],
 
     classifiers=[
@@ -36,6 +36,7 @@ setuptools.setup(
       'License :: OSI Approved :: MIT License',
 
       'Programming Language :: Python :: 3',
+      'Programming Language :: Python :: 3.5',
       'Programming Language :: Python :: 3.6',
     ],
 
