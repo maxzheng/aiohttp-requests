@@ -36,7 +36,8 @@ class Requests:
         """ aiohttp.ClientSession.close is async even though it isn't calling any async methods """
         if self._session:
             if not self._session.closed:
-                if self._session._connector_owner:
+                # Older aiohttp does not have _connector_owner
+                if not hasattr(self._session, '_connector_owner') or self._session._connector_owner:
                     self._session._connector.close()
                 self._session._connector = None
 
