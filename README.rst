@@ -12,8 +12,8 @@ Behold, the power of `aiohttp <https://aiohttp.readthedocs.io>`_ client with `Re
     >>>
     >>> async def main():
     ...     response = await requests.get('https://api.github.com/user', auth=aiohttp.BasicAuth('user', 'password'))
-    ...     text = await r.text()
-    ...     json = await r.json()
+    ...     text = await response.text()
+    ...     json = await response.json()
     ...     return response, content, text, json
     ...
     >>> loop = asyncio.get_event_loop()
