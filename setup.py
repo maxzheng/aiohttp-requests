@@ -31,7 +31,7 @@ setuptools.setup(
       'Development Status :: 5 - Production/Stable',
 
       'Intended Audience :: Developers',
-      'Topic :: Software Development :: Library',
+      'Topic :: Software Development :: Libraries :: Python Modules',
 
       'License :: OSI Approved :: MIT License',
 
@@ -39,5 +39,5 @@ setuptools.setup(
       'Programming Language :: Python :: 3.6',
     ],
 
-    keywords='<KEYWORDS>',
+    keywords='aiohttp HTTP client async requests',
 )
