@@ -1,12 +1,9 @@
 aiohttp-requests
 ============================================================
 
-A thin wrapper for `aiohttp <https://aiohttp.readthedocs.io>`_ client with `Requests <http://docs.python-requests.org/>`_ simplicity.
+Behold, the power of `aiohttp <https://aiohttp.readthedocs.io>`_ client with `Requests <http://docs.python-requests.org/>`_ simplicity:
 
-Behold, the power of aiohttp client with Requests simplicity
-============================================================
-
-.. code-block: python
+.. code-block:: python
 
     >>> import asyncio
     >>>
@@ -14,10 +11,10 @@ Behold, the power of aiohttp client with Requests simplicity
     >>> from aiohttp_requests import requests
     >>>
     >>> async def main():
-    ...     r = await requests.get('https://api.github.com/user', auth=aiohttp.BasicAuth('user', 'password'))
+    ...     response = await requests.get('https://api.github.com/user', auth=aiohttp.BasicAuth('user', 'password'))
     ...     text = await r.text()
     ...     json = await r.json()
-    ...     return r, content, text, json
+    ...     return response, content, text, json
     ...
     >>> loop = asyncio.get_event_loop()
     >>> r, text, json = loop.run_until_complete(main())
@@ -35,7 +32,7 @@ Behold, the power of aiohttp client with Requests simplicity
     >>> json
     {'login': 'user', 'public_repos': 28, ...}
 
-The `requests` object is just proxying `get` and any other HTTP verb methods to `aiohttp.ClientSession`, which returns `aiohttp.ClientResponse`. To do anything else, just read the `aiohttp <https://aiohttp.readthedocs.io>`_ doc.
+The `requests` object is just proxying `get` and any other HTTP verb methods to `aiohttp.ClientSession <http://aiohttp.readthedocs.io/en/v3.0.1/client_reference.html#client-session>`_, which returns `aiohttp.ClientResponse <http://aiohttp.readthedocs.io/en/v3.0.1/client_reference.html#response-object>`_. To do anything else, just read the `aiohttp <https://aiohttp.readthedocs.io>`_ doc.
 
 Links & Contact Info
 ====================
