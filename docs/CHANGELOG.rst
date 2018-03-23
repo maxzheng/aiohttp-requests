@@ -1,5 +1,11 @@
-Version 0.0.7
+Version 0.0.8
 ================================================================================
+
+* Set min code coverage to 90
+* Improve session close and reopen automatically
+
+Version 0.0.7
+--------------------------------------------------------------------------------
 
 * Fix code example
 
