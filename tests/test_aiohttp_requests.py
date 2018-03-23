@@ -1,9 +1,7 @@
 from aiohttp_requests import requests
 from aioresponses import aioresponses
-import pytest
 
 
-@pytest.mark.asyncio
 async def test_aiohttp_requests():
     test_url = 'http://dummy-url'
     test_payload = {'hello': 'world'}
@@ -17,3 +15,21 @@ async def test_aiohttp_requests():
         assert test_payload == json
 
     requests.close()  # Normally called on destroy
+
+
+async def test_aiohttp_requests_integration():
+    response = await requests.get('https://www.google.com')
+    content = await response.text()
+
+    assert response.status == 200
+    assert len(content) > 10000
+
+
+async def test_aiohttp_requests_after_close(loop):
+    requests.close()
+
+    await test_aiohttp_requests_integration()
+
+    await requests.session.close()
+
+    await test_aiohttp_requests_integration()
