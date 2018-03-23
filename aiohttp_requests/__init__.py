@@ -22,13 +22,21 @@ class Requests:
     @property
     def session(self):
         """ An instance of aiohttp.ClientSession """
-        if not self._session or self._session.closed:
+        if not self._session or self._session.closed or self._session.loop.is_closed():
             self._session = aiohttp.ClientSession(*self._session_args[0], **self._session_args[1])
         return self._session
 
     def __getattr__(self, attr):
         if attr.upper() in aiohttp.hdrs.METH_ALL:
-            return functools.partial(self.session._request, attr.upper())
+            @functools.wraps(self.session._request)
+            def session_request(*args, **kwargs):
+                """
+                This ensures `self.session` is always called where it can check the session/loop state so can't use functools.partials
+                as monkeypatch seems to do something weird where __getattr__ is only called once for each attribute after patch is undone
+                """
+                return self.session._request(attr.upper(), *args, **kwargs)
+
+            return session_request
         else:
             return super().__getattribute__(attr)
 

@@ -26,10 +26,12 @@ async def test_aiohttp_requests_integration():
 
 
 async def test_aiohttp_requests_after_close(loop):
+    # Closing ourself
     requests.close()
 
     await test_aiohttp_requests_integration()
 
+    # Closing aiohttp session
     await requests.session.close()
 
     await test_aiohttp_requests_integration()
