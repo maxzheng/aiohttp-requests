@@ -1,9 +1,5 @@
-from pip.req import parse_requirements
 import setuptools
 
-
-# Filters out relative/local requirements (i.e. ../lib/utils)
-remote_requirements = '\n'.join(str(r.req) for r in parse_requirements("requirements.txt", session='dummy') if r.req)
 
 setuptools.setup(
     name='aiohttp-requests',
@@ -17,7 +13,7 @@ setuptools.setup(
 
     url='https://github.com/maxzheng/aiohttp-requests',
 
-    install_requires=remote_requirements,
+    install_requires=open('requirements.txt').read(),
 
     license='MIT',
 
