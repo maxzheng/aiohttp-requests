@@ -31,8 +31,9 @@ class Requests:
             @functools.wraps(self.session._request)
             def session_request(*args, **kwargs):
                 """
-                This ensures `self.session` is always called where it can check the session/loop state so can't use functools.partials
-                as monkeypatch seems to do something weird where __getattr__ is only called once for each attribute after patch is undone
+                This ensures `self.session` is always called where it can check the session/loop state so can't use
+                functools.partials as monkeypatch seems to do something weird where __getattr__ is only called once for
+                each attribute after patch is undone
                 """
                 return self.session._request(attr.upper(), *args, **kwargs)
 
@@ -44,10 +45,11 @@ class Requests:
         """
         Close aiohttp.ClientSession.
 
-        This is useful to be called manually in tests if each test when each test uses a new loop. After close, new requests will
-        automatically create a new session.
+        This is useful to be called manually in tests if each test when each test uses a new loop. After close, new
+        requests will automatically create a new session.
 
-        Note: We need a sync version for `__del__` and `aiohttp.ClientSession.close()` is async even though it doesn't have to be.
+        Note: We need a sync version for `__del__` and `aiohttp.ClientSession.close()` is async even though it doesn't
+        have to be.
         """
         if self._session:
             if not self._session.closed:

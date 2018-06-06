@@ -21,7 +21,7 @@ setuptools.setup(
     include_package_data=True,
 
     python_requires='>=3.5',
-    setup_requires=['setuptools-git'],
+    setup_requires=['setuptools-git', 'wheel'],
 
     classifiers=[
       'Development Status :: 5 - Production/Stable',
