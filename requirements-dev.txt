@@ -1,0 +1,12 @@
+-r requirements.txt
+aioresponses
+cryptography
+flake8
+mock
+pytest
+pytest-aiohttp
+pytest-cov
+pytest-fixtures
+pytest-xdist
+sphinx
+tox

@@ -20,8 +20,11 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
 
-    python_requires='>=3.5',
+    python_requires='>=3.6',
     setup_requires=['setuptools-git', 'wheel'],
+    extra_require={
+        'dev': open('requirements-dev.txt').read(),
+    },
 
     classifiers=[
       'Development Status :: 5 - Production/Stable',
@@ -32,8 +35,9 @@ setuptools.setup(
       'License :: OSI Approved :: MIT License',
 
       'Programming Language :: Python :: 3',
-      'Programming Language :: Python :: 3.5',
       'Programming Language :: Python :: 3.6',
+      'Programming Language :: Python :: 3.7',
+      'Programming Language :: Python :: 3.8',
     ],
 
     keywords='aiohttp HTTP client async requests',
