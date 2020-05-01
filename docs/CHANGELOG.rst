@@ -1,3 +1,13 @@
+Version 0.2.0
+================================================================================
+* More compatibility with requests
+* Deprecate usage of ``Requests.session`` and ``Requests.close()``. The
+  Alternatives are ``Requests.async_session()`` and ``Requests.async_close())``
+  respectively
+* Raise the required Python version to 3.6
+* Raise the required aiohttp version to 3.1.0
+
+
 Version 0.1.2
 ================================================================================
 
