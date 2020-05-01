@@ -14,7 +14,7 @@ async def test_aiohttp_requests():
 
         assert test_payload == json
 
-    requests.close()  # Normally called on destroy
+    await requests.async_close()  # Normally called on destroy
 
 
 async def test_aiohttp_requests_integration():
@@ -27,11 +27,11 @@ async def test_aiohttp_requests_integration():
 
 async def test_aiohttp_requests_after_close(loop):
     # Closing ourself
-    requests.close()
+    await (await requests.async_session()).close()
 
     await test_aiohttp_requests_integration()
 
     # Closing aiohttp session
-    await requests.session.close()
+    await (await requests.async_session()).close()
 
     await test_aiohttp_requests_integration()

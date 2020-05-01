@@ -13,6 +13,15 @@ from aiohttp.client_reqrep import ClientResponse
 
 from .proxy import should_bypass_proxies
 
+try:
+    from aiohttp.helpers import get_running_loop
+except ImportError:
+    def get_running_loop(loop):
+        if loop is not None:
+            return loop
+        else:
+            return asyncio.get_event_loop()
+
 
 class AsyncContextManager:
     def __init__(self, aiter):
@@ -173,27 +182,28 @@ class Requests:
     def __init__(self, *args, **kwargs):
         self._session_args = (args, kwargs)
         self._session = None
+        self._new_session_mu = asyncio.Lock()
         self._session_mu = asyncio.Lock()
 
-    @property
-    def session(self):
+    async def async_session(self):
         """ An instance of aiohttp.ClientSession """
-        if not self._session or self._session.closed or self._session.loop.is_closed():
-            self._session = aiohttp.ClientSession(*self._session_args[0], **self._session_args[1])
-        return self._session
+        async with self._new_session_mu:
+            if not self._session or self._session.closed or self._session.loop.is_closed():
+                self._session = aiohttp.ClientSession(*self._session_args[0], **self._session_args[1])
+            return self._session
 
     @asynccontextmanager
-    async def merge_cookies(self, cookies):
+    async def merge_cookies(self, session, cookies):
         if not cookies:
             yield
         else:
             with self._session_mu:
-                prev_cookie_jar = self._session._cookie_jar
+                prev_cookie_jar = session._cookie_jar
                 new_cookie_jar = CookieJar(unsafe=prev_cookie_jar._unsafe, loop=prev_cookie_jar._loop)
                 new_cookie_jar.update_cookies(prev_cookie_jar)
                 new_cookie_jar.update_cookies(cookies)
                 yield
-                self._session._cookie_jar = prev_cookie_jar
+                session._cookie_jar = prev_cookie_jar
 
     async def request(self, method, url, params=None, data=None, headers=None, cookies=None, files=None,
                       auth=None, timeout=None, allow_redirects=True, proxies=None,
@@ -232,8 +242,9 @@ class Requests:
 
         auth = handle_requests_basic_auth(auth)
 
-        async with self.merge_cookies(cookies):
-            resp = await self.session.request(
+        session = await self.async_session()
+        async with self.merge_cookies(session, cookies):
+            resp = await session.request(
                 method, url,
                 params=params,
                 data=data,
@@ -252,26 +263,26 @@ class Requests:
             resp.__class__ = OurClientResponse
             return resp
 
-    def close(self):
+    async def async_close(self):
         """
         Close aiohttp.ClientSession.
 
         This is useful to be called manually in tests if each test when each test uses a new loop. After close, new
         requests will automatically create a new session.
-
-        Note: We need a sync version for `__del__` and `aiohttp.ClientSession.close()` is async even though it doesn't
-        have to be.
         """
-        if self._session:
-            if not self._session.closed:
-                # Older aiohttp does not have _connector_owner
-                if not hasattr(self._session, '_connector_owner') or self._session._connector_owner:
-                    self._session._connector.close()
-                self._session._connector = None
-            self._session = None
+        async with self._new_session_mu:
+            if self._session:
+                await self._session.close()
+                self._session = None
 
     def __del__(self):
-        self.close()
+        try:
+            loop = get_running_loop(None)
+            if loop is not None:
+                loop.create_task(self._session.close())
+        except RuntimeError:
+            # get_running_loop() may raise RuntimeError() on a MainThread
+            pass
 
 
 requests = Requests()

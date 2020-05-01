@@ -350,7 +350,7 @@ def test_host_name_matcher_ipv6_network():
             assert matcher(in_)
 
 
-async def test_should_bypass_proxies(setenv):
+async def test_should_bypass_proxies(setenv, loop):
     from aiohttp_requests import Requests
     from aiohttp.client_reqrep import ClientResponse
     from aiohttp.helpers import BasicAuth
@@ -477,7 +477,16 @@ async def test_should_bypass_proxies(setenv):
     async def request_mock(method, url, *args, **kwargs):
         nonlocal call_args
         call_args = mock.call(method, url, *args, **kwargs)
-        return ClientResponse(method, URL(url))
+        return ClientResponse(
+            method, URL(url),
+            writer=None,
+            continue100=False,
+            timer=None,
+            request_info=None,
+            traces=None,
+            loop=loop,
+            session=None,
+        )
 
     with mock.patch(
         "aiohttp.ClientSession",
