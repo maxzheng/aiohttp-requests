@@ -1,10 +1,11 @@
 import itertools
-import socket
 from unittest import mock
 import urllib.parse
 
 import pytest
 from yarl import URL
+
+from .utils import dummy_server_factory
 
 
 def test_host_name_matcher_ipv4_network():
@@ -212,7 +213,7 @@ def test_host_name_matcher_ipv4_network():
             ],
         ),
         (
-            "hostname", 
+            "hostname",
             [
                 ("192.168", False),
                 ("192.168.", False),
@@ -244,31 +245,36 @@ def test_host_name_matcher_ipv4_network():
                 expected = any(i[1] for i in l)
                 hosts = [i[0] for i in l]
                 matcher = HostNameMatcher(hosts)
-                assert matcher(in_) == expected, f"matcher({in_!r}) != {expected} where matcher = HostNameMatcher({hosts!r})"
+                assert matcher(in_) == expected, \
+                    f"matcher({in_!r}) != {expected} where matcher = HostNameMatcher({hosts!r})"
             # input with port
             for l in itertools.combinations(expecteds, n):
                 expected = any(i[1] for i in l)
                 hosts = [i[0] for i in l]
                 matcher = HostNameMatcher(hosts)
-                assert matcher(in_, "8080") == expected, f"matcher({in_!r}, '8080') != {expected} where matcher = HostNameMatcher({hosts!r})"
+                assert matcher(in_, "8080") == expected, \
+                    f"matcher({in_!r}, '8080') != {expected} where matcher = HostNameMatcher({hosts!r})"
             # expected hosts with ports (1)
             for l in itertools.combinations(expecteds, n):
                 expected = any(i[1] for i in l)
                 hosts = [f"{i[0]}:8080" for i in l]
                 matcher = HostNameMatcher(hosts)
-                assert not matcher(in_), f"matcher({in_!r}) != False where matcher = HostNameMatcher({hosts!r})"
+                assert not matcher(in_), \
+                    f"matcher({in_!r}) != False where matcher = HostNameMatcher({hosts!r})"
             # expected hosts with ports (2)
             for l in itertools.combinations(expecteds, n):
                 expected = any(i[1] for i in l)
                 hosts = [f"{i[0]}:8080" for i in l]
                 matcher = HostNameMatcher(hosts)
-                assert matcher(in_, "8080") == expected, f"matcher({in_!r}, '8080') != {expected} where matcher = HostNameMatcher({hosts!r})"
+                assert matcher(in_, "8080") == expected, \
+                    f"matcher({in_!r}, '8080') != {expected} where matcher = HostNameMatcher({hosts!r})"
             # expected hosts with asterisk port
             for l in itertools.combinations(expecteds, n):
                 expected = any(i[1] for i in l)
                 hosts = [f"{i[0]}:*" for i in l]
                 matcher = HostNameMatcher(hosts)
-                assert matcher(in_) == expected, f"matcher({in_!r}) != {expected} where matcher = HostNameMatcher({hosts!r})"
+                assert matcher(in_) == expected, \
+                    f"matcher({in_!r}) != {expected} where matcher = HostNameMatcher({hosts!r})"
 
     # wildcard
     expecteds = ["*", "*:*"]
@@ -316,31 +322,36 @@ def test_host_name_matcher_ipv6_network():
                 expected = any(i[1] for i in l)
                 hosts = [i[0] for i in l]
                 matcher = HostNameMatcher(hosts)
-                assert matcher(in_) == expected, f"matcher({in_!r}) != {expected} where matcher = HostNameMatcher({hosts!r})"
+                assert matcher(in_) == expected, \
+                    f"matcher({in_!r}) != {expected} where matcher = HostNameMatcher({hosts!r})"
             # input with port
             for l in itertools.combinations(expecteds, n):
                 expected = any(i[1] for i in l)
                 hosts = [i[0] for i in l]
                 matcher = HostNameMatcher(hosts)
-                assert matcher(in_, "8080") == expected, f"matcher({in_!r}, '8080') != {expected} where matcher = HostNameMatcher({hosts!r})"
+                assert matcher(in_, "8080") == expected, \
+                    f"matcher({in_!r}, '8080') != {expected} where matcher = HostNameMatcher({hosts!r})"
             # expected hosts with ports (1)
             for l in itertools.combinations(expecteds, n):
                 expected = any(i[1] for i in l)
                 hosts = [f"{i[0]}:8080" for i in l]
                 matcher = HostNameMatcher(hosts)
-                assert not matcher(in_), f"matcher({in_!r}) != False where matcher = HostNameMatcher({hosts!r})"
+                assert not matcher(in_), \
+                    f"matcher({in_!r}) != False where matcher = HostNameMatcher({hosts!r})"
             # expected hosts with ports (2)
             for l in itertools.combinations(expecteds, n):
                 expected = any(i[1] for i in l)
                 hosts = [f"{i[0]}:8080" for i in l]
                 matcher = HostNameMatcher(hosts)
-                assert matcher(in_, "8080") == expected, f"matcher({in_!r}, '8080') != {expected} where matcher = HostNameMatcher({hosts!r})"
+                assert matcher(in_, "8080") == expected, \
+                    f"matcher({in_!r}, '8080') != {expected} where matcher = HostNameMatcher({hosts!r})"
             # expected hosts with asterisk port
             for l in itertools.combinations(expecteds, n):
                 expected = any(i[1] for i in l)
                 hosts = [f"{i[0]}:*" for i in l]
                 matcher = HostNameMatcher(hosts)
-                assert matcher(in_) == expected, f"matcher({in_!r}) != {expected} where matcher = HostNameMatcher({hosts!r})"
+                assert matcher(in_) == expected, \
+                    f"matcher({in_!r}) != {expected} where matcher = HostNameMatcher({hosts!r})"
 
     # wildcard
     expecteds = ["*", "*:*"]
@@ -471,9 +482,10 @@ async def test_should_bypass_proxies(setenv, loop):
                 ("proxy_auth", BasicAuth("user", "pass"))
             ]
         ),
-    ]        
+    ]
 
     call_args = None
+
     async def request_mock(method, url, *args, **kwargs):
         nonlocal call_args
         call_args = mock.call(method, url, *args, **kwargs)
@@ -491,48 +503,35 @@ async def test_should_bypass_proxies(setenv, loop):
     with mock.patch(
         "aiohttp.ClientSession",
         return_value=mock.Mock(request=request_mock)
-    ) as aiohttp_client_factory:
+    ):
         req = Requests()
-        aiohttp_client = aiohttp_client_factory.return_value
         for case in cases:
             await req.get(case[0])
             for arg, expected in case[1]:
                 assert call_args[2][arg] == expected, f"req.get({case[0]!r}) => request({arg} != {expected!r})"
 
 
-def getsockname(sock):
-    sockname = sock.getsockname()
-    if sock.family == socket.AF_INET:
-        return "{}:{}".format(*sockname)
-    elif sock.family == socket.AF_INET6:
-        return "[{}]:{}".format(*sockname)
-    else:
-        raise NotImplementedError()
-
-
-async def dummy_server_factory(bind_addr, text):
-    from aiohttp import web
-    async def handler(request):
-        return web.Response(text=text)
-
-    sv = web.Server(handler)
-    runner = web.ServerRunner(sv)
-    await runner.setup()
-    site = web.TCPSite(runner, bind_addr, 0)
-    await site.start()
-    yield getsockname(site._server.sockets[0])
-    await site.stop()
-
-
 @pytest.fixture(params=["::1", "127.0.0.1"])
 async def dummy_proxy(request):
-    async for sockname in dummy_server_factory(request.param, "proxy"):
+    from aiohttp import web
+
+    async def handler(request):
+        return web.Response(text="proxy")
+
+    # ugly verbose code due to absence of "async yield from"
+    async for sockname in dummy_server_factory(request.param, handler):
         yield sockname
 
 
 @pytest.fixture(params=["::1", "127.0.0.1"])
 async def dummy_server(request):
-    async for sockname in dummy_server_factory(request.param, "ok"):
+    from aiohttp import web
+
+    async def handler(request):
+        return web.Response(text="ok")
+
+    # ugly verbose code due to absence of "async yield from"
+    async for sockname in dummy_server_factory(request.param, handler):
         yield "http://{}/".format(sockname)
 
 

@@ -1,7 +1,6 @@
 import asyncio
 import os
 import aiohttp
-import functools
 import ssl
 import urllib.request
 
@@ -11,6 +10,7 @@ from aiohttp.cookiejar import CookieJar
 from aiohttp.client_exceptions import InvalidURL
 from aiohttp.client_reqrep import ClientResponse
 
+from .compat import asynccontextmanager
 from .proxy import should_bypass_proxies
 
 try:
@@ -21,32 +21,6 @@ except ImportError:
             return loop
         else:
             return asyncio.get_event_loop()
-
-
-class AsyncContextManager:
-    def __init__(self, aiter):
-        self.aiter = aiter
-
-    async def __aenter__(self):
-        return await self.aiter.__anext__()
-
-    async def __aexit__(self, typ, val, tb):
-        try:
-            if typ is not None:
-                await self.aiter.athrow(typ, val, tb)
-            else:
-                await self.aiter.asend(None)
-            raise RuntimeError("generator didn't stop")
-        except StopAsyncIteration:
-            pass
-        return True
-
-
-def asynccontextmanager(fn):
-    @functools.wraps(fn)
-    def _(*args, **kwargs):
-        return AsyncContextManager(fn(*args, **kwargs))
-    return _
 
 
 def merge_environment_settings(proxies, verify):
