@@ -1,0 +1,40 @@
+---
+name: Run tests
+on:
+  - push
+jobs:
+  lint_and_coverage:
+    name: style and coverage checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.8"
+      - name: Setup venv, upgrade pip and install tox
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install tox
+      - name: Run tox
+        run: .venv/bin/tox -e style,cover
+  test:
+    name: tox
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.6", "3.7", "3.8"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup venv, upgrade pip and install tox
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install tox
+      - name: Run tox
+        run: .venv/bin/tox -e py${{ matrix.python-version }}-aiohttp{3.3,3.4,3.5,3.6,latest-stable}
