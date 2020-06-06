@@ -55,7 +55,10 @@ class Requests:
             if not self._session.closed:
                 # Older aiohttp does not have _connector_owner
                 if not hasattr(self._session, '_connector_owner') or self._session._connector_owner:
-                    self._session._connector.close()
+                    try:
+                        self._session._connector._close()  # New version returns a coroutine in close() as warning
+                    except Exception:
+                        self._session._connector.close()
                 self._session._connector = None
             self._session = None
 
