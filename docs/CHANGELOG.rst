@@ -1,5 +1,10 @@
-Version 0.1.2
+Version 0.1.3
 ================================================================================
+
+* Remove version requirement for aiohttp as aioresponses suppports latest now
+
+Version 0.1.2
+--------------------------------------------------------------------------------
 
 * Update setup
 
