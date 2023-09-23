@@ -1,5 +1,40 @@
-Version 0.1.3
+Version 0.1.4
 ================================================================================
+
+* Test against Python 3.7+
+* Create python-package.yml
+* Fix tests and docs
+
+Version 0.1.4
+--------------------------------------------------------------------------------
+
+* Test against Python 3.7+
+* Create python-package.yml
+* Fix tests and docs
+
+Version 0.1.4
+--------------------------------------------------------------------------------
+
+* Test against Python 3.7+
+* Create python-package.yml
+* Fix tests and docs
+
+Version 0.1.4
+--------------------------------------------------------------------------------
+
+* Test against Python 3.7+
+* Create python-package.yml
+* Fix tests and docs
+
+Version 0.1.4
+--------------------------------------------------------------------------------
+
+* Test against Python 3.7+
+* Create python-package.yml
+* Fix tests and docs
+
+Version 0.1.3
+--------------------------------------------------------------------------------
 
 * Remove version requirement for aiohttp as aioresponses suppports latest now
 
