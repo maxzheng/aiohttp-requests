@@ -3,9 +3,10 @@ import functools
 
 # Patch ClientResponse.read to release immediately after read so we don't need to worry about that / use context manager
 _read_only = aiohttp.client_reqrep.ClientResponse.read
-async def _read_and_release(self):  # noqa
+@functools.wraps(_read_only)  # noqa
+async def _read_and_release(self, *args, **kwargs):
     try:
-        data = await _read_only(self)
+        data = await _read_only(self, *args, **kwargs)
     finally:
         self.close()
 
