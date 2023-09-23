@@ -25,7 +25,7 @@ async def test_aiohttp_requests_integration():
     assert len(content) > 10000
 
 
-async def test_aiohttp_requests_after_close(loop):
+async def test_aiohttp_requests_after_close():
     # Closing ourself
     requests.close()
 

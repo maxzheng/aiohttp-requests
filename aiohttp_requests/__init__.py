@@ -22,7 +22,7 @@ class Requests:
     @property
     def session(self):
         """ An instance of aiohttp.ClientSession """
-        if not self._session or self._session.closed or self._session.loop.is_closed():
+        if not self._session or self._session.closed:
             self._session = aiohttp.ClientSession(*self._session_args[0], **self._session_args[1])
         return self._session
 
