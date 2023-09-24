@@ -1,3 +1,8 @@
+Version 0.2.0
+================================================================================
+
+* Remove patch and let garbage collector reap/close the responses (if not already closed by reading to eof)
+
 Version 0.1.6
 ================================================================================
 
