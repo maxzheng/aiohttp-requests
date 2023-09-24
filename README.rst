@@ -16,7 +16,7 @@ Behold, the power of aiohttp_ client with `Requests <http://docs.python-requests
         json = await response.json()
         return response, text, json
 
-    r, text, json = asyncio.get_event_loop().run_until_complete(main())
+    r, text, json = asyncio.run(main())
 
     >>> r
     <ClientResponse(https://api.github.com/) [200 OK]>
