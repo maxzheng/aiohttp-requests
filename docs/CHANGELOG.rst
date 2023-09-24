@@ -1,5 +1,10 @@
-Version 0.2.0
+Version 0.2.1
 ================================================================================
+
+* Fix links in README
+
+Version 0.2.0
+--------------------------------------------------------------------------------
 
 * Remove patch and let garbage collector reap/close the responses (if not already closed by reading to eof)
 
