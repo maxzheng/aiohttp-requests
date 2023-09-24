@@ -1,7 +1,7 @@
 aiohttp-requests
 ============================================================
 
-Behold, the power of `aiohttp <https://aiohttp.readthedocs.io>`_ client with `Requests <http://docs.python-requests.org/>`_ simplicity:
+Behold, the power of aiohttp_ client with `Requests <http://docs.python-requests.org/>`_ simplicity:
 
 .. code-block:: python
 
@@ -31,7 +31,11 @@ Behold, the power of `aiohttp <https://aiohttp.readthedocs.io>`_ client with `Re
     >>> json
     {'current_user_url': 'https://api.github.com/user', ... }
 
-The `requests` object is just proxying `get` and any other HTTP verb methods to `aiohttp.ClientSession <http://aiohttp.readthedocs.io/en/v3.0.1/client_reference.html#client-session>`_, which returns `aiohttp.ClientResponse <http://aiohttp.readthedocs.io/en/v3.0.1/client_reference.html#response-object>`_. To do anything else, just read the `aiohttp <https://aiohttp.readthedocs.io>`_ doc.
+The `requests` object is just proxying `get` and other HTTP verb methods to `aiohttp.ClientSession`_, which returns `aiohttp.ClientResponse`_. To do anything else, read the aiohttp_ doc.
+
+.. _`aiohttp.ClientSession`: https://docs.aiohttp.org/en/stable/client_reference.html?#aiohttp.ClientSession
+.. _`aiohttp.ClientResponse`: https://docs.aiohttp.org/en/stable/client_reference.html?#aiohttp.ClientResponse
+.. _aiohttp: https://docs.aiohttp.org/en/stable/
 
 Links & Contact Info
 ====================
@@ -40,6 +44,5 @@ Links & Contact Info
 | GitHub Source: https://github.com/maxzheng/aiohttp-requests
 | Report Issues/Bugs: https://github.com/maxzheng/aiohttp-requests/issues
 |
-| Follow: https://twitter.com/MaxZhengX
 | Connect: https://www.linkedin.com/in/maxzheng
 | Contact: maxzheng.os @t gmail.com
