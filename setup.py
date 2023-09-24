@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name='aiohttp-requests',
-    version='0.2.2',
+    version='0.2.3',
 
     author='Max Zheng',
     author_email='maxzheng.os @t gmail.com',
