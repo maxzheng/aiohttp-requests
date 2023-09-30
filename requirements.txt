@@ -1,1 +1,2 @@
 aiohttp[speedups]
+coworker==2.*

@@ -31,6 +31,20 @@ Behold, the power of aiohttp_ client with `Requests <http://docs.python-requests
     >>> json
     {'current_user_url': 'https://api.github.com/user', ... }
 
+Plus built-in concurrency control to do multiple requests safely:
+
+.. code-block:: python
+
+    async def main():
+        # Pass in a list of urls instead of just one. Optionally pass in as_iterator=True to iterate the responses.
+        responses = await requests.get(['https://api.github.com'] * 2, auth=aiohttp.BasicAuth('user', 'password'))
+        print(responses)    # [<ClientResponse(https://...) [200 OK]>, , <ClientResponse(https://...) [200 OK]>]
+
+        # It defaults to 10 concurrent requests. If you can handle more, then set it higher:
+        requests.max_concurrency = 100
+
+    asyncio.run(main())
+
 The `requests` object is just proxying `get` and other HTTP verb methods to `aiohttp.ClientSession`_, which returns `aiohttp.ClientResponse`_. To do anything else, read the aiohttp_ doc.
 
 .. _`aiohttp.ClientSession`: https://docs.aiohttp.org/en/stable/client_reference.html?#aiohttp.ClientSession
