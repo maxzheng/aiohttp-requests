@@ -40,7 +40,7 @@ Plus built-in concurrency control to do multiple requests safely:
         responses = await requests.get(['https://api.github.com'] * 2, auth=aiohttp.BasicAuth('user', 'password'))
         print(responses)    # [<ClientResponse(https://...) [200 OK]>, , <ClientResponse(https://...) [200 OK]>]
 
-        # It defaults to 10 concurrent requests. If you can handle more, then set it higher:
+        # It defaults to 10 concurrent requests maximum. If you can handle more, then set it higher:
         requests.max_concurrency = 100
 
     asyncio.run(main())
