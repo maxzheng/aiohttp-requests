@@ -24,6 +24,7 @@ async def test_aiohttp_requests_integration():
 
     assert response.status == 200
     assert len(content) > 10000
+    assert 'Search the world' in content
 
 
 async def test_aiohttp_requests_integration_multiple():
@@ -35,6 +36,7 @@ async def test_aiohttp_requests_integration_multiple():
 
         assert response.status == 200
         assert len(content) > 10000
+        assert 'Search the world' in content
 
     # Multiple requests as iterator
     responses = requests.get(['https://www.google.com'] * 2, as_iterator=True)
@@ -44,6 +46,7 @@ async def test_aiohttp_requests_integration_multiple():
 
         assert response.status == 200
         assert len(content) > 10000
+        assert 'Search the world' in content
 
 
 async def test_aiohttp_requests_after_close():

@@ -29,20 +29,7 @@ class Requests:
 
     def __getattr__(self, attr):
         if attr.upper() in aiohttp.hdrs.METH_ALL:
-            @functools.wraps(self.session._request)
-            def session_request(path, *args, **kwargs):
-                """
-                This ensures `self.session` is always called where it can check the session/loop state so can't use
-                functools.partials as monkeypatch seems to do something weird where __getattr__ is only called once
-                for each attribute after patch is undone
-                """
-                if isinstance(path, (list, tuple)):
-                    return self._concurrent_request(self.session._request, attr.upper(), path, args, kwargs,
-                                                    as_iterator=kwargs.pop('as_iterator', False))
-                else:
-                    return self.session._request(attr.upper(), path, *args, **kwargs)
-
-            return session_request
+            return functools.partial(self.request, attr.upper())
         else:
             return super().__getattribute__(attr)
 
@@ -54,6 +41,23 @@ class Requests:
 
     def _concurrent_request(self, request, verb, paths, args, kwargs, as_iterator=False):
         return self._worker.do([(request, verb, path, args, kwargs) for path in paths], as_iterator=as_iterator)
+
+    def request(self, verb, path, *args, **kwargs):
+        """
+        This ensures `self.session` is always called where it can check the session/loop state so can't use
+        functools.partials as monkeypatch seems to do something weird where __getattr__ is only called once
+        for each attribute after patch is undone
+
+        :param verb: HTTP verb
+        :param path: URL path
+        :param args: Additional arguments for aiohttp.ClientSession.request
+        :param kwargs: Additional keyword arguments for aiohttp.ClientSession.request
+        """
+        if isinstance(path, (list, tuple)):
+            return self._concurrent_request(self.session._request, verb.upper(), path, args, kwargs,
+                                            as_iterator=kwargs.pop('as_iterator', False))
+        else:
+            return self.session._request(verb.upper(), path, *args, **kwargs)
 
     def close(self):
         """
